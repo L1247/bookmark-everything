@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -652,7 +653,13 @@ namespace BookmarkEverything
                             else if (_pingType == PingTypes.OpenAndSelect)
                             {
                                 if (Selection.activeObject) Selection.activeObject = null;
-                                if (Path.HasExtension(path)) Selection.activeObject = AssetDatabase.LoadMainAssetAtPath(path);
+                                if (Path.HasExtension(path))
+                                {
+                                    var assetAtPath = AssetDatabase.LoadMainAssetAtPath(path);
+                                    var entryIsScene     = assetAtPath is SceneAsset;
+                                    if (entryIsScene) EditorSceneManager.OpenScene(path , OpenSceneMode.Single);
+                                    Selection.activeObject = assetAtPath;
+                                }
                                 else OpenDir(path);
                             }
 
