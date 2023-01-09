@@ -75,10 +75,13 @@ namespace BookmarkEverything
         int          _objectIndexToBeRemovedDueToDeletedAsset = -1;
         int          _objectIndexToBeRemoved                  = -1;
 
-        Vector2 _settingScrollPos;
-        bool    _changesMade      = false;
-        int     _lastlyAddedCount = -1;
-        Color   _defaultGUIColor;
+        Vector2           _settingScrollPos;
+        bool              _changesMade      = false;
+        int               _lastlyAddedCount = -1;
+        Color             _defaultGUIColor;
+        private EntryData selectedEntityData;
+        private bool      mouseDown;
+        private int       index;
 
     #endregion
 
@@ -605,6 +608,7 @@ namespace BookmarkEverything
             _projectFinderEntriesScroll =
                     EditorGUILayout.BeginScrollView(_projectFinderEntriesScroll , _scrollViewStyle ,
                                                     GUILayout.MaxHeight(position.height));
+            index = -1;
             for (int i = 0 ; i < _currentSettings.EntryData.Count ; i++)
             {
                 if (_currentSettings.EntryData[i].Category == category)
@@ -655,8 +659,8 @@ namespace BookmarkEverything
                                 if (Selection.activeObject) Selection.activeObject = null;
                                 if (Path.HasExtension(path))
                                 {
-                                    var assetAtPath = AssetDatabase.LoadMainAssetAtPath(path);
-                                    var entryIsScene     = assetAtPath is SceneAsset;
+                                    var assetAtPath  = AssetDatabase.LoadMainAssetAtPath(path);
+                                    var entryIsScene = assetAtPath is SceneAsset;
                                     if (entryIsScene) EditorSceneManager.OpenScene(path , OpenSceneMode.Single);
                                     Selection.activeObject = assetAtPath;
                                 }
@@ -679,6 +683,11 @@ namespace BookmarkEverything
                     }
 
                     EditorGUILayout.EndHorizontal();
+                }
+
+                if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
+                {
+                    DrawHorizonLine();
                 }
             }
 
@@ -709,6 +718,22 @@ namespace BookmarkEverything
             {
                 EditorUtility.FocusProjectWindow();
             }
+        }
+
+        private static void DrawHorizonLine()
+        {
+            EditorGUILayout.LabelField("" , GUI.skin.horizontalSlider);
+        }
+
+        public static void DrawUILine(Color color , int thickness = 2 , int padding = 10)
+        {
+            Event.current.Use();
+            Rect r = EditorGUILayout.GetControlRect(GUILayout.Height(padding + thickness));
+            r.height =  thickness;
+            r.y      += padding / 2;
+            r.x      -= 2;
+            r.width  += 6;
+            EditorGUI.DrawRect(r , color);
         }
 
         private void DrawSettings()
@@ -999,9 +1024,29 @@ namespace BookmarkEverything
                 GUI.DrawTexture(new Rect(0 , 0 , EditorGUIUtility.currentViewWidth , position.height) , _editorWindowBackground);
             }
 
+            // Debug.Log($"{Event.current.type}");
             DrawHeader();
-
+            // DetectDrag();
             DropAreaGUI();
+        }
+
+        private void DetectDrag()
+        {
+            var e = Event.current;
+            if (e.type == EventType.MouseDown)
+            {
+                Debug.Log($"MouseDown");
+                mouseDown = true;
+            }
+            else if (selectedEntityData != null && e.type == EventType.MouseDrag)
+            {
+                Debug.Log($"{e.mousePosition}");
+            }
+            else if (e.type == EventType.MouseUp)
+            {
+                selectedEntityData = null;
+                Debug.Log($"MouseUp");
+            }
         }
 
         private static void OpenDir(string path)
