@@ -946,15 +946,18 @@ namespace BookmarkEverything
         [MenuItem("Window/Bookmark Everything %h")]
         private static void Init()
         {
-            var windows = (BookmarkEverythingEditor[])Resources.FindObjectsOfTypeAll(typeof(BookmarkEverythingEditor));
-            if (windows.Length == 0)
+            var hasOpenInstances = HasOpenInstances<BookmarkEverythingEditor>();
+            var window           = GetWindow<BookmarkEverythingEditor>();
+            // var windows          = (BookmarkEverythingEditor[])Resources.FindObjectsOfTypeAll(typeof(BookmarkEverythingEditor));
+            if (hasOpenInstances)
             {
-                BookmarkEverythingEditor window = (BookmarkEverythingEditor)GetWindow(typeof(BookmarkEverythingEditor));
-                window.InitInternal();
+                // FocusWindowIfItsOpen(typeof(BookmarkEverythingEditor));
+                window.Close();
             }
             else
             {
-                FocusWindowIfItsOpen(typeof(BookmarkEverythingEditor));
+                // BookmarkEverythingEditor window = (BookmarkEverythingEditor)GetWindow(typeof(BookmarkEverythingEditor));
+                window.InitInternal();
             }
         }
 
