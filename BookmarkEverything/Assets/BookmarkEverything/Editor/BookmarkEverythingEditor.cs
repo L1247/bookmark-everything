@@ -655,10 +655,12 @@ namespace BookmarkEverything
                                 if (Selection.activeObject) Selection.activeObject = null;
                                 if (Path.HasExtension(path))
                                 {
-                                    var assetAtPath = AssetDatabase.LoadMainAssetAtPath(path);
-                                    var entryIsScene     = assetAtPath is SceneAsset;
+                                    var asset        = AssetDatabase.LoadMainAssetAtPath(path);
+                                    var entryIsScene = asset is SceneAsset;
+                                    var prefabType   = PrefabUtility.GetPrefabType(asset);
                                     if (entryIsScene) EditorSceneManager.OpenScene(path , OpenSceneMode.Single);
-                                    Selection.activeObject = assetAtPath;
+                                    else if (prefabType == PrefabType.Prefab) AssetDatabase.OpenAsset(asset);
+                                    Selection.activeObject = asset;
                                 }
                                 else OpenDir(path);
                             }
