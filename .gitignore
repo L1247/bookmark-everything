@@ -37,4 +37,8 @@ sysinfo.txt
 
 BookmarkEverything/Logs/
 
-BookmarkEverything/
+BookmarkEverything/.idea/
+
+BookmarkEverything/UserSettings/
+
+BookmarkEverything/Assets/Scenes/
