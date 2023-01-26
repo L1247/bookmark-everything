@@ -7,6 +7,9 @@ This tool enables you to add bookmarks to your project files so you can reach th
 ```
 https://github.com/L1247/bookmark-everything.git?path=BookmarkEverything/Assets/BookmarkEverything
 ```
+## how to use
+[![Unity tool - Bookmark-Everything 介紹如何使用與安裝](https://img.youtube.com/vi/1qSm_RuzgXE/0.jpg)](https://youtu.be/1qSm_RuzgXE)
+##
 
 ## Download
 [Asset Store Page](https://assetstore.unity.com/packages/tools/utilities/bookmark-everything-134467), or clone/download this repository and add the folder named *BookmarkEverything* to your *Assets* folder.
