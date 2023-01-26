@@ -75,10 +75,12 @@ namespace BookmarkEverything
         int          _objectIndexToBeRemovedDueToDeletedAsset = -1;
         int          _objectIndexToBeRemoved                  = -1;
 
-        Vector2 _settingScrollPos;
-        bool    _changesMade      = false;
-        int     _lastlyAddedCount = -1;
-        Color   _defaultGUIColor;
+        Vector2              _settingScrollPos;
+        bool                 _changesMade      = false;
+        int                  _lastlyAddedCount = -1;
+        Color                _defaultGUIColor;
+        private       int    lastProjectFinderTabeIndex;
+        private const string ProjectfindertabindexKey = "ProjectFinderTabIndex";
 
     #endregion
 
@@ -595,7 +597,12 @@ namespace BookmarkEverything
                 case 4 : //so
                     DrawProjectFinderEntries(CATEGORY_SO);
                     break;
-                default : break;
+            }
+
+            if (lastProjectFinderTabeIndex != _projectFinderTabIndex)
+            {
+                lastProjectFinderTabeIndex = _projectFinderTabIndex;
+                EditorPrefs.SetInt(ProjectfindertabindexKey , _projectFinderTabIndex);
             }
         }
 
@@ -987,9 +994,12 @@ namespace BookmarkEverything
 
         private void OnEnable()
         {
-            titleContent     = RetrieveGUIContent("Bookmark" , "CustomSorting");
-            _defaultGUIColor = GUI.color;
-            minSize          = new Vector2(400 , 400);
+            titleContent           = RetrieveGUIContent("Bookmark" , "CustomSorting");
+            _defaultGUIColor       = GUI.color;
+            minSize                = new Vector2(400 , 400);
+            _projectFinderTabIndex = EditorPrefs.GetInt(ProjectfindertabindexKey);
+            Debug.Log($"{_projectFinderTabIndex}");
+            lastProjectFinderTabeIndex = _projectFinderTabIndex;
         }
 
         private void OnGUI()
