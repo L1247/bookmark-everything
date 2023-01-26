@@ -998,7 +998,6 @@ namespace BookmarkEverything
             _defaultGUIColor       = GUI.color;
             minSize                = new Vector2(400 , 400);
             _projectFinderTabIndex = EditorPrefs.GetInt(ProjectfindertabindexKey);
-            Debug.Log($"{_projectFinderTabIndex}");
             lastProjectFinderTabeIndex = _projectFinderTabIndex;
         }
 
