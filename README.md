@@ -7,7 +7,7 @@ This tool enables you to add bookmarks to your project files so you can reach th
 ```
 https://github.com/L1247/bookmark-everything.git?path=BookmarkEverything/Assets/BookmarkEverything
 ```
-## How to use in unity Click the picture below
+## How to use in unity Click the youtube texture below
 [![Unity tool - Bookmark-Everything 介紹如何使用與安裝](https://img.youtube.com/vi/1qSm_RuzgXE/0.jpg)](https://youtu.be/1qSm_RuzgXE)
 ##
 
