@@ -5,7 +5,7 @@ This tool enables you to add bookmarks to your project files so you can reach th
 
 ## add package from git URL
 ```
-https://github.com/L1247/bookmark-everything.git?path=bookmark-everything/Assets/BookmarkEverything
+https://github.com/L1247/bookmark-everything.git?path=BookmarkEverything/Assets/BookmarkEverything
 ```
 
 ## Download
