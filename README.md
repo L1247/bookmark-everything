@@ -1,7 +1,6 @@
-[![](https://img.shields.io/github/v/release/L1247/bookmark-everything)](https://github.com/mob-sakai/SoftMaskForUGUI/releases)
-[![](https://img.shields.io/github/release-date/L1247/bookmark-everything)](https://github.com/mob-sakai/SoftMaskForUGUI/releases)
+[![](https://img.shields.io/github/v/release/L1247/rStarUtility)](https://github.com/mob-sakai/SoftMaskForUGUI/releases)
+[![](https://img.shields.io/github/release-date/L1247/rStarUtility)](https://github.com/mob-sakai/SoftMaskForUGUI/releases)
 ![](https://img.shields.io/badge/unity-2017.1%20or%20later-green.svg)
-[![](https://img.shields.io/github/license/mob-sakai/SoftMaskForUGUI.svg)](https://github.com/mob-sakai/SoftMaskForUGUI/blob/main/LICENSE.txt)
 
 # bookmark-everything
 ## About
