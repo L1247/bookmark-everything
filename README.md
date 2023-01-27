@@ -1,3 +1,8 @@
+[![](https://img.shields.io/github/v/release/L1247/bookmark-everything)](https://github.com/mob-sakai/SoftMaskForUGUI/releases)
+[![](https://img.shields.io/github/release-date/L1247/bookmark-everything)](https://github.com/mob-sakai/SoftMaskForUGUI/releases)
+![](https://img.shields.io/badge/unity-2017.1%20or%20later-green.svg)
+[![](https://img.shields.io/github/license/mob-sakai/SoftMaskForUGUI.svg)](https://github.com/mob-sakai/SoftMaskForUGUI/blob/main/LICENSE.txt)
+
 # bookmark-everything
 ## About
 This tool enables you to add bookmarks to your project files so you can reach them easily. You can bookmark anything that exists and lives on your project folder. The shortcut is *CTRL+H* or you can open it in Window/Bookmark Everything. It also reflects to path/name changes, asset removals correctly.
