@@ -10,6 +10,7 @@ using System.Text;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
 #endregion
@@ -665,7 +666,7 @@ namespace BookmarkEverything
                                     var asset        = AssetDatabase.LoadMainAssetAtPath(path);
                                     var entryIsScene = asset is SceneAsset;
                                     var prefabType   = PrefabUtility.GetPrefabType(asset);
-                                    if (entryIsScene) EditorSceneManager.OpenScene(path , OpenSceneMode.Single);
+                                    if (entryIsScene) SaveSceneDialog(path);
                                     else if (prefabType == PrefabType.Prefab) AssetDatabase.OpenAsset(asset);
                                     Selection.activeObject = asset;
                                 }
@@ -717,6 +718,31 @@ namespace BookmarkEverything
             if (clicked)
             {
                 EditorUtility.FocusProjectWindow();
+            }
+        }
+
+        private static void SaveSceneDialog(string scenePath)
+        {
+            var option = EditorUtility.DisplayDialogComplex(
+                    "Unsaved scene Changes" ,
+                    "Do you want to save the changes you made before load new scene?" ,
+                    "Save" ,
+                    "Cancel" ,
+                    "Don't Save");
+
+            switch (option)
+            {
+                // Save.
+                case 0 :
+                    EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
+                    EditorSceneManager.OpenScene(scenePath , OpenSceneMode.Single);
+                    break;
+                // cancel
+                case 1 : break;
+                // Don't Save.
+                case 2 :
+                    EditorSceneManager.OpenScene(scenePath , OpenSceneMode.Single);
+                    break;
             }
         }
 
@@ -994,10 +1020,10 @@ namespace BookmarkEverything
 
         private void OnEnable()
         {
-            titleContent           = RetrieveGUIContent("Bookmark" , "CustomSorting");
-            _defaultGUIColor       = GUI.color;
-            minSize                = new Vector2(400 , 400);
-            _projectFinderTabIndex = EditorPrefs.GetInt(ProjectfindertabindexKey);
+            titleContent               = RetrieveGUIContent("Bookmark" , "CustomSorting");
+            _defaultGUIColor           = GUI.color;
+            minSize                    = new Vector2(400 , 400);
+            _projectFinderTabIndex     = EditorPrefs.GetInt(ProjectfindertabindexKey);
             lastProjectFinderTabeIndex = _projectFinderTabIndex;
         }
 
