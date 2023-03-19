@@ -685,7 +685,6 @@ namespace BookmarkEverything
                                 {
                                     var asset = AssetDatabase.LoadMainAssetAtPath(path);
                                     Selection.activeObject = asset;
-                                    Debug.Log($"{_openAsProperties}");
                                     if (_openAsProperties)
                                     {
                                         OpenPropertiesEditorWindowDoubleClickListener.OpenInPropertyEditor(asset);
