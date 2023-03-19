@@ -7,8 +7,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using JD.AssetizerEditor;
 using UnityEditor;
 using UnityEditor.SceneManagement;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
@@ -55,6 +57,7 @@ namespace BookmarkEverything
 
         private PingTypes _pingType;
         private bool      _visualMode;
+        private bool      _openAsProperties;
         private bool      _autoClose;
         private bool      _showFullPath;
         private bool      _showFullPathForFolder;
@@ -64,6 +67,7 @@ namespace BookmarkEverything
         private int  _projectFinderTabIndex = 0;
         private bool _visualModeChanged;
         private bool _controlVisualMode;
+        private bool _controlOpenAsProperties;
         private bool _controlAutoClose;
         private bool _autoCloseChanged;
         private bool _controlShowFullPath;
@@ -552,22 +556,38 @@ namespace BookmarkEverything
 
             EditorGUILayout.BeginHorizontal();
 
-            label              = "Visual Mode(Experimental!) : ";
-            _controlVisualMode = _visualMode;
-            _visualMode        = EditorGUILayout.Toggle(label , _visualMode);
+            label                    = "OpenAsProperties";
+            _controlOpenAsProperties = _openAsProperties;
+            _openAsProperties        = EditorGUILayout.Toggle(label , _openAsProperties);
 
-            if (_controlVisualMode != _visualMode)
-            {
-                _visualModeChanged = true;
-            }
+            // if (_controlOpenAsProperties != _openAsProperties)
+            // {
+            //     _visualModeChanged = true;
+            // }
 
-            if (_visualModeChanged)
+            Debug.Log($"{_openAsProperties}");
+            if (_controlOpenAsProperties != _openAsProperties)
             {
-                VisualMode(_visualMode);
-                _currentSettings.VisualMode = _visualMode;
+                _currentSettings.OpenAsProperties = _openAsProperties;
                 _currentSettings.Save();
-                _visualModeChanged = false;
             }
+
+            // label              = "Visual Mode(Experimental!) : ";
+            // _controlVisualMode = _visualMode;
+            // _visualMode        = EditorGUILayout.Toggle(label , _visualMode);
+            //
+            // if (_controlVisualMode != _visualMode)
+            // {
+            //     _visualModeChanged = true;
+            // }
+            //
+            // if (_visualModeChanged)
+            // {
+            //     VisualMode(_visualMode);
+            //     _currentSettings.VisualMode = _visualMode;
+            //     _currentSettings.Save();
+            //     _visualModeChanged = false;
+            // }
 
             EditorGUILayout.EndHorizontal();
 
@@ -663,12 +683,20 @@ namespace BookmarkEverything
                                 if (Selection.activeObject) Selection.activeObject = null;
                                 if (Path.HasExtension(path))
                                 {
-                                    var asset        = AssetDatabase.LoadMainAssetAtPath(path);
-                                    var entryIsScene = asset is SceneAsset;
-                                    var prefabType   = PrefabUtility.GetPrefabType(asset);
-                                    if (entryIsScene) SaveSceneDialog(path);
-                                    else if (prefabType == PrefabType.Prefab) AssetDatabase.OpenAsset(asset);
+                                    var asset = AssetDatabase.LoadMainAssetAtPath(path);
                                     Selection.activeObject = asset;
+                                    Debug.Log($"{_openAsProperties}");
+                                    if (_openAsProperties)
+                                    {
+                                        OpenPropertiesEditorWindowDoubleClickListener.OpenInPropertyEditor(asset);
+                                    }
+                                    else
+                                    {
+                                        var entryIsScene = asset is SceneAsset;
+                                        var prefabType   = PrefabUtility.GetPrefabType(asset);
+                                        if (entryIsScene) SaveSceneDialog(path);
+                                        else if (prefabType == PrefabType.Prefab) AssetDatabase.OpenAsset(asset);
+                                    }
                                 }
                                 else OpenDir(path);
                             }
@@ -1016,6 +1044,7 @@ namespace BookmarkEverything
             _autoClose             = _currentSettings.AutoClose;
             _showFullPath          = _currentSettings.ShowFullPath;
             _showFullPathForFolder = _currentSettings.ShowFullPathForFolders;
+            _openAsProperties      = _currentSettings.OpenAsProperties;
         }
 
         private void OnEnable()
@@ -1288,6 +1317,7 @@ namespace BookmarkEverything
             public bool            ShowFullPath;
             public bool            ShowFullPathForFolders = true;
             public bool            VisualMode;
+            public bool            OpenAsProperties;
             public List<EntryData> EntryData = new List<EntryData>();
             public PingTypes       PingType;
 
