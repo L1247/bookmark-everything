@@ -7,12 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using JD.AssetizerEditor;
 using UnityEditor;
 using UnityEditor.SceneManagement;
-using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
 #endregion
@@ -558,19 +555,18 @@ namespace BookmarkEverything
 
             label                    = "OpenAsProperties";
             _controlOpenAsProperties = _openAsProperties;
-            _openAsProperties        = EditorGUILayout.Toggle(label , _openAsProperties);
+            // _openAsProperties        = EditorGUILayout.Toggle(label , _openAsProperties);
 
             // if (_controlOpenAsProperties != _openAsProperties)
             // {
             //     _visualModeChanged = true;
             // }
 
-            Debug.Log($"{_openAsProperties}");
-            if (_controlOpenAsProperties != _openAsProperties)
-            {
-                _currentSettings.OpenAsProperties = _openAsProperties;
-                _currentSettings.Save();
-            }
+            // if (_controlOpenAsProperties != _openAsProperties)
+            // {
+            //     _currentSettings.OpenAsProperties = _openAsProperties;
+            //     _currentSettings.Save();
+            // }
 
             // label              = "Visual Mode(Experimental!) : ";
             // _controlVisualMode = _visualMode;
@@ -687,15 +683,12 @@ namespace BookmarkEverything
                                     Selection.activeObject = asset;
                                     if (_openAsProperties)
                                     {
-                                        OpenPropertiesEditorWindowDoubleClickListener.OpenInPropertyEditor(asset);
+                                        // OpenPropertiesEditorWindowDoubleClickListener.OpenInPropertyEditor(asset);
                                     }
-                                    else
-                                    {
-                                        var entryIsScene = asset is SceneAsset;
-                                        var prefabType   = PrefabUtility.GetPrefabType(asset);
-                                        if (entryIsScene) SaveSceneDialog(path);
-                                        else if (prefabType == PrefabType.Prefab) AssetDatabase.OpenAsset(asset);
-                                    }
+                                    var entryIsScene = asset is SceneAsset;
+                                    var prefabType   = PrefabUtility.GetPrefabType(asset);
+                                    if (entryIsScene) SaveSceneDialog(path);
+                                    else if (prefabType == PrefabType.Prefab) AssetDatabase.OpenAsset(asset);
                                 }
                                 else OpenDir(path);
                             }
@@ -750,6 +743,12 @@ namespace BookmarkEverything
 
         private static void SaveSceneDialog(string scenePath)
         {
+            var sceneIsDirty = EditorSceneManager.GetActiveScene().isDirty;
+            if (sceneIsDirty == false)
+            {
+                EditorSceneManager.OpenScene(scenePath , OpenSceneMode.Single);
+                return;
+            }
             var option = EditorUtility.DisplayDialogComplex(
                     "Unsaved scene Changes" ,
                     "Do you want to save the changes you made before load new scene?" ,
