@@ -689,6 +689,7 @@ namespace BookmarkEverything
                                     var prefabType   = PrefabUtility.GetPrefabType(asset);
                                     if (entryIsScene) SaveSceneDialog(path);
                                     else if (prefabType == PrefabType.Prefab) AssetDatabase.OpenAsset(asset);
+                                    Selection.activeObject = AssetDatabase.LoadMainAssetAtPath(path);
                                 }
                                 else OpenDir(path);
                             }
