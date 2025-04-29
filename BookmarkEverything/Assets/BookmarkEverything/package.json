@@ -2,7 +2,7 @@
   "name": "com.rstartools.bookmarkeverything",
   "displayName": "Bookmark-Everything",
   "description": "Bookmark",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "unity": "2022.2",
   "unityRelease": "0f1",
   "dependencies": {

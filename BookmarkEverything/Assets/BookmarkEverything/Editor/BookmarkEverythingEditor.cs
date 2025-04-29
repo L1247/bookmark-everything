@@ -1,6 +1,7 @@
 ﻿#region
 
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -36,8 +37,10 @@ namespace BookmarkEverything
         private bool    _initialized;
         List<EntryData> _tempLocations = new List<EntryData>();
 
-        private string[] _projectFinderHeaders =
-                new string[] { CATEGORY_STARRED , CATEGORY_SCENE , CATEGORY_PREFAB , CATEGORY_SCRIPT , CATEGORY_SO };
+        private readonly string[] projectFinderHeaders =
+        {
+            CATEGORY_STARRED , CATEGORY_SCENE , CATEGORY_PREFAB , CATEGORY_SCRIPT , CATEGORY_SO
+        };
 
         GUIStyle _buttonStyle;
         GUIStyle _textFieldStyle;
@@ -61,7 +64,7 @@ namespace BookmarkEverything
 
         private int _tabIndex = 0;
 
-        private int  _projectFinderTabIndex = 0;
+        private int  projectFinderTabIndex = 0;
         private bool _visualModeChanged;
         private bool _controlVisualMode;
         private bool _controlOpenAsProperties;
@@ -123,7 +126,7 @@ namespace BookmarkEverything
                         DragAndDrop.AcceptDrag();
                         List<EntryData> duplicateList = new List<EntryData>();
                         List<EntryData> allowedList   = new List<EntryData>();
-                        foreach (Object draggedObject in DragAndDrop.objectReferences)
+                        foreach (var draggedObject in DragAndDrop.objectReferences)
                         {
                             if (!AssetDatabase.Contains(draggedObject))
                             {
@@ -133,7 +136,7 @@ namespace BookmarkEverything
                                 return;
                             }
 
-                            EntryData entryData = new EntryData(draggedObject);
+                            var entryData = new EntryData(draggedObject);
                             if (_tempLocations.Contains(entryData , new EntryDataGUIDComparer()))
                             {
                                 duplicateList.Add(_tempLocations.Find((entry) => entry.GUID == entryData.GUID));
@@ -165,8 +168,8 @@ namespace BookmarkEverything
                                 {
                                     if (_tabIndex == 0)
                                     {
-                                        duplicateList[i].Category = GetNameOfCategory(_projectFinderTabIndex);
-                                        duplicateList[i].Index    = _projectFinderTabIndex;
+                                        duplicateList[i].Category = GetNameOfCategory(projectFinderTabIndex);
+                                        duplicateList[i].Index    = projectFinderTabIndex;
                                     }
                                     else if (_tabIndex == 1)
                                     {
@@ -192,8 +195,8 @@ namespace BookmarkEverything
                                 {
                                     if (_tabIndex == 0)
                                     {
-                                        allowedList[i].Category = GetNameOfCategory(_projectFinderTabIndex);
-                                        allowedList[i].Index    = _projectFinderTabIndex;
+                                        allowedList[i].Category = GetNameOfCategory(projectFinderTabIndex);
+                                        allowedList[i].Index    = projectFinderTabIndex;
                                     }
                                     else if (_tabIndex == 1)
                                     {
@@ -216,20 +219,20 @@ namespace BookmarkEverything
                         }
                         else if (allowedList.Count > 0)
                         {
-                            for (int i = 0 ; i < allowedList.Count ; i++)
-                            {
-                                if (_tabIndex == 0)
-                                {
-                                    allowedList[i].Category = GetNameOfCategory(_projectFinderTabIndex);
-                                    allowedList[i].Index    = _projectFinderTabIndex;
-                                }
-                                else if (_tabIndex == 1)
-                                {
-                                    allowedList[i].Category = GetNameOfCategory(0);
-                                    allowedList[i].Index    = 0;
-                                    _lastlyAddedCount++;
-                                }
-                            }
+                            // for (int i = 0 ; i < allowedList.Count ; i++)
+                            // {
+                            //     if (_tabIndex == 0)
+                            //     {
+                            //         allowedList[i].Category = GetNameOfCategory(_projectFinderTabIndex);
+                            //         allowedList[i].Index    = _projectFinderTabIndex;
+                            //     }
+                            //     else if (_tabIndex == 1)
+                            //     {
+                            //         allowedList[i].Category = GetNameOfCategory(0);
+                            //         allowedList[i].Index    = 0;
+                            //         _lastlyAddedCount++;
+                            //     }
+                            // }
 
                             _tempLocations.AddRange(allowedList);
                             if (_tabIndex == 0)
@@ -240,6 +243,14 @@ namespace BookmarkEverything
                             // {
                             //     _changesMade = true;
                             // }
+                        }
+
+                        // Auto switch tab to last obj category.
+                        if (allowedList.Count > 0)
+                        {
+                            var lastObjCategory = allowedList[^1].Category;
+                            var indexOfTab      = projectFinderHeaders.ToList().IndexOf(lastObjCategory);
+                            projectFinderTabIndex = indexOfTab;
                         }
                     }
 
@@ -288,7 +299,7 @@ namespace BookmarkEverything
             _projectFinderContents.Add(RetrieveGUIContent(CATEGORY_PREFAB ,  ResolveIconNameFromFileExtension("prefab")));
             _projectFinderContents.Add(RetrieveGUIContent(CATEGORY_SCRIPT ,  ResolveIconNameFromFileExtension("cs")));
             _projectFinderContents.Add(RetrieveGUIContent(CATEGORY_SO ,      ResolveIconNameFromFileExtension("asset")));
-            if (_projectFinderContents.Count != _projectFinderHeaders.Length)
+            if (_projectFinderContents.Count != projectFinderHeaders.Length)
             {
                 Debug.LogError("Inconsistency between Content count and Header count, please add to both of them!");
             }
@@ -592,9 +603,9 @@ namespace BookmarkEverything
 
         private void DrawProjectFinder()
         {
-            _projectFinderTabIndex = GUILayout.Toolbar(_projectFinderTabIndex , _projectFinderContents.ToArray() ,
+            projectFinderTabIndex = GUILayout.Toolbar(projectFinderTabIndex , _projectFinderContents.ToArray() ,
                                                        _toolbarButtonStyle , GUILayout.ExpandHeight(false));
-            switch (_projectFinderTabIndex)
+            switch (projectFinderTabIndex)
             {
                 case 0 : //starred
                     DrawProjectFinderEntries(CATEGORY_STARRED);
@@ -616,10 +627,10 @@ namespace BookmarkEverything
                     break;
             }
 
-            if (lastProjectFinderTabeIndex != _projectFinderTabIndex)
+            if (lastProjectFinderTabeIndex != projectFinderTabIndex)
             {
-                lastProjectFinderTabeIndex = _projectFinderTabIndex;
-                EditorPrefs.SetInt(ProjectfindertabindexKey , _projectFinderTabIndex);
+                lastProjectFinderTabeIndex = projectFinderTabIndex;
+                EditorPrefs.SetInt(ProjectfindertabindexKey , projectFinderTabIndex);
             }
         }
 
@@ -852,11 +863,11 @@ namespace BookmarkEverything
                     //çatecori
                     ///*int categoryIndex*/ = GetIndexOfCategory(_tempPlayerPrefLocations[i].Category);
                     _tempLocations[i].Index = EditorGUILayout.Popup(_tempLocations[i].Index ,
-                                                                    RetrieveGUIContent(_projectFinderHeaders) , _popupStyle ,
+                                                                    RetrieveGUIContent(projectFinderHeaders) , _popupStyle ,
                                                                     GUILayout.MinHeight(EditorGUIUtility.singleLineHeight) ,
                                                                     GUILayout.MaxWidth(150));
 
-                    _tempLocations[i].Category = _projectFinderHeaders[_tempLocations[i].Index];
+                    _tempLocations[i].Category = projectFinderHeaders[_tempLocations[i].Index];
 
                     if (!exists)
                     {
@@ -963,9 +974,9 @@ namespace BookmarkEverything
 
         private int GetIndexOfCategory(string category)
         {
-            for (int i = 0 ; i < _projectFinderHeaders.Length ; i++)
+            for (int i = 0 ; i < projectFinderHeaders.Length ; i++)
             {
-                if (_projectFinderHeaders[i] == category)
+                if (projectFinderHeaders[i] == category)
                 {
                     return i;
                 }
@@ -998,9 +1009,9 @@ namespace BookmarkEverything
 
         private string GetNameOfCategory(int index)
         {
-            if (index >= 0 && index < _projectFinderHeaders.Length)
+            if (index >= 0 && index < projectFinderHeaders.Length)
             {
-                return _projectFinderHeaders[index];
+                return projectFinderHeaders[index];
             }
 
             Debug.LogError("No category found with given index of " + index);
@@ -1054,8 +1065,8 @@ namespace BookmarkEverything
             titleContent               = RetrieveGUIContent("Bookmark" , "CustomSorting");
             _defaultGUIColor           = GUI.color;
             minSize                    = new Vector2(400 , 400);
-            _projectFinderTabIndex     = EditorPrefs.GetInt(ProjectfindertabindexKey);
-            lastProjectFinderTabeIndex = _projectFinderTabIndex;
+            projectFinderTabIndex     = EditorPrefs.GetInt(ProjectfindertabindexKey);
+            lastProjectFinderTabeIndex = projectFinderTabIndex;
         }
 
         private void OnGUI()
@@ -1261,15 +1272,23 @@ namespace BookmarkEverything
                 //AssetDatabase.TryGetGUIDAndLocalFileIdentifier(obj, out guid, out localId);
 
                 GUID = guid;
-                if (obj.GetType() == typeof(DefaultAsset))
-                {
-                    Category = "Folder";
-                }
-                else
-                {
-                    string[] s = obj.name.Split(CHAR_SEPERATOR);
-                    Category = s[s.Length - 1];
-                }
+                var objType = obj.GetType();
+
+                if (objType.IsSubclassOf(typeof(ScriptableObject))) Category = CATEGORY_SO;
+                else if (objType == typeof(MonoScript)) Category             = CATEGORY_SCRIPT;
+                else if (objType == typeof(GameObject)) Category             = CATEGORY_PREFAB;
+                else if (objType == typeof(SceneAsset)) Category             = CATEGORY_SCENE;
+                else Category                                                = CATEGORY_STARRED;
+                //
+                // if (obj.GetType() == typeof(DefaultAsset))
+                // {
+                //     Category = "Folder";
+                // }
+                // else
+                // {
+                // var s = obj.name.Split(CHAR_SEPERATOR);
+                // Category = s[s.Length - 1];
+                // }
             }
 
         #endregion
