@@ -275,7 +275,7 @@ namespace BookmarkEverything
         private void ConstructMainHeaders()
         {
             _headerContents.Add(RetrieveGUIContent("Project Finder" , "UnityEditor.SceneHierarchyWindow"));
-            _headerContents.Add(RetrieveGUIContent("Settings" , "SettingsIcon"));
+            _headerContents.Add(RetrieveGUIContent("Settings" ,       "SettingsIcon"));
         }
 
         /// <summary>
@@ -284,10 +284,10 @@ namespace BookmarkEverything
         private void ConstructProjectFinderHeaders()
         {
             _projectFinderContents.Add(RetrieveGUIContent(CATEGORY_STARRED , "Favorite"));
-            _projectFinderContents.Add(RetrieveGUIContent(CATEGORY_SCENE , ResolveIconNameFromFileExtension("unity")));
-            _projectFinderContents.Add(RetrieveGUIContent(CATEGORY_PREFAB , ResolveIconNameFromFileExtension("prefab")));
-            _projectFinderContents.Add(RetrieveGUIContent(CATEGORY_SCRIPT , ResolveIconNameFromFileExtension("cs")));
-            _projectFinderContents.Add(RetrieveGUIContent(CATEGORY_SO , ResolveIconNameFromFileExtension("asset")));
+            _projectFinderContents.Add(RetrieveGUIContent(CATEGORY_SCENE ,   ResolveIconNameFromFileExtension("unity")));
+            _projectFinderContents.Add(RetrieveGUIContent(CATEGORY_PREFAB ,  ResolveIconNameFromFileExtension("prefab")));
+            _projectFinderContents.Add(RetrieveGUIContent(CATEGORY_SCRIPT ,  ResolveIconNameFromFileExtension("cs")));
+            _projectFinderContents.Add(RetrieveGUIContent(CATEGORY_SO ,      ResolveIconNameFromFileExtension("asset")));
             if (_projectFinderContents.Count != _projectFinderHeaders.Length)
             {
                 Debug.LogError("Inconsistency between Content count and Header count, please add to both of them!");
@@ -452,7 +452,7 @@ namespace BookmarkEverything
         {
             EditorGUILayout.BeginVertical(_boxStyle);
             EditorGUILayout.LabelField("General Settings" , _boldLabelStyle);
-            EditorGUILayout.LabelField("" , GUI.skin.horizontalSlider);
+            EditorGUILayout.LabelField("" ,                 GUI.skin.horizontalSlider);
             EditorGUILayout.BeginHorizontal();
             string label = "Current Ping Type : ";
             EditorGUILayout.LabelField(label , GUILayout.MaxWidth(label.Length * 7.3f));
@@ -685,6 +685,7 @@ namespace BookmarkEverything
                                     {
                                         // OpenPropertiesEditorWindowDoubleClickListener.OpenInPropertyEditor(asset);
                                     }
+
                                     var entryIsScene = asset is SceneAsset;
                                     var prefabType   = PrefabUtility.GetPrefabType(asset);
                                     if (entryIsScene) SaveSceneDialog(path);
@@ -750,6 +751,7 @@ namespace BookmarkEverything
                 EditorSceneManager.OpenScene(scenePath , OpenSceneMode.Single);
                 return;
             }
+
             var option = EditorUtility.DisplayDialogComplex(
                     "Unsaved scene Changes" ,
                     "Do you want to save the changes you made before load new scene?" ,
@@ -784,7 +786,7 @@ namespace BookmarkEverything
             //Iterate all found entries - key is path value is type
             EditorGUILayout.BeginVertical(_boxStyle);
             EditorGUILayout.LabelField("Manage Registered Assets" , _boldLabelStyle);
-            EditorGUILayout.LabelField("" , GUI.skin.horizontalSlider);
+            EditorGUILayout.LabelField("" ,                         GUI.skin.horizontalSlider);
             for (int i = 0 ; i < _tempLocations.Count ; i++)
             {
                 bool exists = IOHelper.Exists(_tempLocations[i].GUID , ExistentialCheckStrategy.GUID);
@@ -798,8 +800,8 @@ namespace BookmarkEverything
                     EditorGUILayout.BeginVertical();
                     {
                         string fullPath = exists
-                                ? AssetDatabase.GUIDToAssetPath(_tempLocations[i].GUID)
-                                : "(Removed)" + AssetDatabase.GUIDToAssetPath(_tempLocations[i].GUID);
+                                                  ? AssetDatabase.GUIDToAssetPath(_tempLocations[i].GUID)
+                                                  : "(Removed)" + AssetDatabase.GUIDToAssetPath(_tempLocations[i].GUID);
                         GUILayout.Space(4);
                         EditorGUILayout.SelectableLabel(fullPath , _textFieldStyle ,
                                                         GUILayout.Height(EditorGUIUtility.singleLineHeight));
@@ -1312,13 +1314,13 @@ namespace BookmarkEverything
         {
         #region Public Variables
 
-            public bool            AutoClose;
+            public bool            AutoClose = true;
             public bool            ShowFullPath;
             public bool            ShowFullPathForFolders = true;
             public bool            VisualMode;
             public bool            OpenAsProperties;
             public List<EntryData> EntryData = new List<EntryData>();
-            public PingTypes       PingType;
+            public PingTypes       PingType  = PingTypes.OpenAndSelect;
 
         #endregion
 
