@@ -1032,8 +1032,9 @@ namespace BookmarkEverything
             //if nothing is saved, retrieve the default values
             if (_currentSettings == null)
             {
-                _currentSettings          = new SaveData();
-                _currentSettings.PingType = PingTypes.Both;
+                _currentSettings           = new SaveData();
+                _currentSettings.PingType  = PingTypes.OpenAndSelect;
+                _currentSettings.AutoClose = true;
                 _currentSettings.Save();
             }
 
